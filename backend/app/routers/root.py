@@ -1,0 +1,10 @@
+from fastapi import APIRouter, Depends
+
+from app.routers.auth import get_current_user
+
+router = APIRouter()
+
+
+@router.get("/")
+def read_root(_current_user: str = Depends(get_current_user)):
+    return {"message": "Hello, World!"}

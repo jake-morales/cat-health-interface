@@ -46,24 +46,31 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
-
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="text-6xl">🐱</div>
+          <h1 className="text-4xl font-bold text-gray-900">404</h1>
+          <p className="text-gray-500">This page doesn't exist.</p>
+          <a
+            href="/login"
+            className="inline-block mt-2 px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Go to login
+          </a>
+        </div>
+      </main>
+    );
   }
+
+  const details =
+    import.meta.env.DEV && error instanceof Error ? error.message : "An unexpected error occurred.";
+  const stack = import.meta.env.DEV && error instanceof Error ? error.stack : undefined;
 
   return (
     <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
+      <h1>Oops!</h1>
       <p>{details}</p>
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">

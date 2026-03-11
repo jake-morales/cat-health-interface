@@ -1,3 +1,7 @@
+# uv
 .venv
 
 __pycache__
+
+# Environment Variables
+.env
