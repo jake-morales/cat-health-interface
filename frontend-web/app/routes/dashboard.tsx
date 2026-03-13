@@ -27,6 +27,7 @@ export default function Dashboard() {
   const [birthday, setBirthday] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -61,6 +62,28 @@ export default function Dashboard() {
   function handleLogout() {
     clearAuth();
     navigate("/");
+  }
+
+  async function handleDeleteCat(catId: string) {
+    setDeletingId(catId);
+    try {
+      const res = await fetch(`${API_BASE}/cats/${catId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      if (res.status === 401) {
+        clearAuth();
+        navigate("/login");
+        return;
+      }
+      if (res.ok) {
+        setCats((prev) => prev.filter((c) => c.id !== catId));
+      }
+    } catch {
+      // silently ignore
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   async function handleAddCat(e: React.FormEvent) {
@@ -215,7 +238,7 @@ export default function Dashboard() {
                 className="bg-white border border-gray-200 rounded-2xl px-5 py-4 flex items-center gap-4"
               >
                 <div className="text-3xl">🐱</div>
-                <div>
+                <div className="flex-1">
                   <p className="font-semibold text-gray-900">{cat.name}</p>
                   <p className="text-sm text-gray-500">
                     {[
@@ -227,6 +250,13 @@ export default function Dashboard() {
                       .join(" · ") || "No details"}
                   </p>
                 </div>
+                <button
+                  onClick={() => handleDeleteCat(cat.id)}
+                  disabled={deletingId === cat.id}
+                  className="text-sm text-red-500 hover:text-red-700 transition-colors disabled:opacity-40"
+                >
+                  {deletingId === cat.id ? "Deleting…" : "Delete"}
+                </button>
               </li>
             ))}
           </ul>

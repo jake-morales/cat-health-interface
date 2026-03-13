@@ -44,3 +44,17 @@ def list_cats(
     db: Session = Depends(get_db),
 ):
     return db.query(Cat).filter(Cat.owner_id == current_user).all()
+
+
+@router.delete("/{cat_id}", status_code=204)
+def delete_cat(
+    cat_id: uuid.UUID,
+    current_user: uuid.UUID = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    cat = db.query(Cat).filter(Cat.id == cat_id, Cat.owner_id == current_user).first()
+    if cat is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Cat not found")
+    db.delete(cat)
+    db.commit()
