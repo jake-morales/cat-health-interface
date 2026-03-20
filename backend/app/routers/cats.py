@@ -1,7 +1,7 @@
 import uuid
 from datetime import date
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -14,6 +14,13 @@ router = APIRouter(prefix="/cats")
 
 class CatCreate(BaseModel):
     name: str
+    breed: str | None = None
+    age: int | None = None
+    birthday: date | None = None
+
+
+class CatUpdate(BaseModel):
+    name: str | None = None
     breed: str | None = None
     age: int | None = None
     birthday: date | None = None
@@ -44,6 +51,23 @@ def list_cats(
     db: Session = Depends(get_db),
 ):
     return db.query(Cat).filter(Cat.owner_id == current_user).all()
+
+
+@router.patch("/{cat_id}", response_model=CatRead)
+def update_cat(
+    cat_id: uuid.UUID,
+    body: CatUpdate,
+    current_user: uuid.UUID = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    cat = db.query(Cat).filter(Cat.id == cat_id, Cat.owner_id == current_user).first()
+    if cat is None:
+        raise HTTPException(status_code=404, detail="Cat not found")
+    for field, value in body.model_dump(exclude_unset=True).items():
+        setattr(cat, field, value)
+    db.commit()
+    db.refresh(cat)
+    return cat
 
 
 @router.delete("/{cat_id}", status_code=204)

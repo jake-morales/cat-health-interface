@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.db.database import Base, engine
-from app.models import cat, user  # noqa: F401 — registers models with Base metadata
-from app.routers import auth, cats, root
+from app.models import cat, user, poop  # noqa: F401 — registers models with Base metadata
+from app.routers import auth, cats, poops, root
 
 Base.metadata.create_all(bind=engine)
 
@@ -19,4 +19,5 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(cats.router)
+app.include_router(poops.router)
 app.include_router(root.router)
