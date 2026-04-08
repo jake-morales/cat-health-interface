@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const API_BASE = "https://cat-health-interface.onrender.com";
+export const API_BASE = "https://mychi.online";
 
 const TOKEN_KEY = "access_token";
 const USER_ID_KEY = "user_id";
