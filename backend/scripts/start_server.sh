@@ -4,6 +4,7 @@ set -e
 APP_DIR=/home/ec2-user/cat-health-interface/backend
 PID_FILE="$APP_DIR/server.pid"
 LOG_FILE="$APP_DIR/server.log"
+export PATH="$HOME/.local/bin:$PATH"
 
 cd "$APP_DIR"
 

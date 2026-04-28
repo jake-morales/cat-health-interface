@@ -2,6 +2,7 @@
 set -euo pipefail
 
 APP_DIR=/home/ec2-user/cat-health-interface/backend
+export PATH="$HOME/.local/bin:$PATH"
 
 cd "$APP_DIR"
 

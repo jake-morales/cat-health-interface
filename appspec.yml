@@ -3,6 +3,11 @@ os: linux
 files:
   - source: /backend
     destination: /home/ec2-user/cat-health-interface/backend
+permissions:
+  - object: /home/ec2-user/cat-health-interface/backend
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
 hooks:
   BeforeInstall:
     - location: backend/scripts/stop_server.sh
@@ -10,7 +15,7 @@ hooks:
       runas: ec2-user
     - location: backend/scripts/ensure_uv.sh
       timeout: 180
-      runas: root
+      runas: ec2-user
   AfterInstall:
     - location: backend/scripts/install_dependencies.sh
       timeout: 300
