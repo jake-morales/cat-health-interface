@@ -1,4 +1,3 @@
-import os
 import uuid
 import jwt
 import bcrypt
@@ -8,10 +7,10 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.config import SECRET_KEY
 from app.db.database import get_db
 from app.models.user import User
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
