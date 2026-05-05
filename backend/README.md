@@ -75,7 +75,7 @@ Do **not** set `ENV=local` on production or staging hosts that should use Parame
 Start with gunicorn and uvicorn workers (already listed in project dependencies):
 
 ```bash
-gunicorn main:app -k uvicorn.workers.UvicornWorker \
+uv run gunicorn main:app -k uvicorn.workers.UvicornWorker \
   --workers 4 \
   --bind 0.0.0.0:8000
 ```
