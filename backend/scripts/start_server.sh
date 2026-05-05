@@ -6,6 +6,9 @@ PID_FILE="$APP_DIR/server.pid"
 LOG_FILE="$APP_DIR/server.log"
 export PATH="$HOME/.local/bin:$PATH"
 
+# Boto3 / SSM need a region; override anytime via AWS_DEFAULT_REGION (e.g. launch template).
+export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-us-west-2}"
+
 cd "$APP_DIR"
 
 # Determine worker count: 2 * CPU cores + 1
